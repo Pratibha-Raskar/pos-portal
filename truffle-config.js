@@ -1,6 +1,6 @@
 require('babel-register')
 require('babel-polyfill')
-
+require('dotenv').config();
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -29,6 +29,8 @@ const HDWalletProvider = require('@truffle/hdwallet-provider')
 const MNEMONIC = process.env.MNEMONIC || 'clock radar mass judge dismiss just intact mind resemble fringe diary casino'
 const API_KEY = process.env.API_KEY
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
+const MATIC_API_KEY = process.env.MATIC_API_KEY
+
 
 module.exports = {
   /**
@@ -69,22 +71,24 @@ module.exports = {
       provider: () =>
         new HDWalletProvider(
           MNEMONIC,
-          `https://goerli.infura.io/v3/${API_KEY}`
+          'https://goerli.infura.io/v3/5636fb39b2c84b2aacdf6404882a7d5b'
         ),
       network_id: 5,
       gas: 7000000,
       gasPrice: 10000000000, // 10 gwei
-      skipDryRun: true
+      skipDryRun: true,
+      networkCheckTimeout: 100000000
     },
     mumbaiChild: {
       provider: () =>
         new HDWalletProvider(
           MNEMONIC,
-          'https://rpc-mumbai.matic.today'
+          `https://matic-mumbai.chainstacklabs.com`
         ),
       network_id: 80001,
       gas: 7000000,
       gasPrice: 10000000000, // 10 gwei
+      timeoutBlocks: 200,
       skipDryRun: true
     },
     mainnetRoot: {
@@ -119,7 +123,8 @@ module.exports = {
       gasPrice: 21,
       outputFile: '/dev/null',
       showTimeSpent: true
-    }
+    },
+    //timeout: 100000000
   },
 
   // Configure your compilers
@@ -143,6 +148,7 @@ module.exports = {
   },
 
   api_keys: {
-    etherscan: ETHERSCAN_API_KEY
+    etherscan: ETHERSCAN_API_KEY,
+//    polygonscan: MATIC_API_KEY
   }
 }

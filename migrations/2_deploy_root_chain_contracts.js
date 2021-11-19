@@ -12,7 +12,7 @@ const DummyStateSender = artifacts.require('DummyStateSender')
 
 const ERC20Predicate = artifacts.require('ERC20Predicate')
 const ERC20PredicateProxy = artifacts.require('ERC20PredicateProxy')
-const MintableERC20Predicate = artifacts.require('MintableERC20Predicate')
+/*const MintableERC20Predicate = artifacts.require('MintableERC20Predicate')
 const MintableERC20PredicateProxy = artifacts.require('MintableERC20PredicateProxy')
 
 const ERC721Predicate = artifacts.require('ERC721Predicate')
@@ -27,9 +27,9 @@ const MintableERC1155PredicateProxy = artifacts.require('MintableERC1155Predicat
 
 const EtherPredicate = artifacts.require('EtherPredicate')
 const EtherPredicateProxy = artifacts.require('EtherPredicateProxy')
-
+*/
 const DummyERC20 = artifacts.require('DummyERC20')
-const DummyMintableERC20 = artifacts.require('DummyMintableERC20')
+/*const DummyMintableERC20 = artifacts.require('DummyMintableERC20')
 
 const DummyERC721 = artifacts.require('DummyERC721')
 const DummyMintableERC721 = artifacts.require('DummyMintableERC721')
@@ -39,22 +39,22 @@ const DummyMintableERC1155 = artifacts.require('DummyMintableERC1155')
 
 const TestRootTunnel = artifacts.require('TestRootTunnel')
 const TestChildTunnel = artifacts.require('TestChildTunnel')
-
+*/
 const utils = require('./utils')
 
 module.exports = async(deployer, network, accounts) => {
+  //console.log(deployer)
   await deployer
-
   console.log('deploying contracts...')
   const rootChainManager = await deployer.deploy(RootChainManager)
   const rootChainManagerProxy = await deployer.deploy(RootChainManagerProxy, '0x0000000000000000000000000000000000000000')
   await rootChainManagerProxy.updateAndCall(RootChainManager.address, rootChainManager.contract.methods.initialize(accounts[0]).encodeABI())
-
+ 
   // -- ERC20 Predicates Deployment, starting
   const erc20Predicate = await deployer.deploy(ERC20Predicate)
   const erc20PredicateProxy = await deployer.deploy(ERC20PredicateProxy, '0x0000000000000000000000000000000000000000')
   await erc20PredicateProxy.updateAndCall(erc20Predicate.address, erc20Predicate.contract.methods.initialize(accounts[0]).encodeABI())
-
+/*
   // Mintable version of ERC20 👇
   const mintableErc20Predicate = await deployer.deploy(MintableERC20Predicate)
   const mintableErc20PredicateProxy = await deployer.deploy(MintableERC20PredicateProxy, '0x0000000000000000000000000000000000000000')
@@ -86,14 +86,27 @@ module.exports = async(deployer, network, accounts) => {
   const etherPredicate = await deployer.deploy(EtherPredicate)
   const etherPredicateProxy = await deployer.deploy(EtherPredicateProxy, '0x0000000000000000000000000000000000000000')
   await etherPredicateProxy.updateAndCall(etherPredicate.address, etherPredicate.contract.methods.initialize(accounts[0]).encodeABI())
-
+*/
   await deployer.deploy(DummyStateSender)
 
   // -- Dummy version of ERC20
-  await deployer.deploy(DummyERC20, 'Dummy ERC20', 'DERC20')
-  await deployer.deploy(DummyMintableERC20, 'Dummy Mintable ERC20', 'DERC20')
-  // -- ends
+  //address for local
   
+var game = "0x96C42C56fdb78294F96B0cFa33c92bed7D75F96a"
+var stake = "0x97e9fA3b2AeA5aa56376a5FB5Cbf153ae91b0660"
+var community = "0xA904540818AC9c47f2321F97F1069B9d8746c6DB"
+var team = "0x316b2Fa7C8a2ab7E21110a4B3f58771C01A71344"
+
+/*
+var game = "0x2e82Ab117e8879c7D5969Cf8C3b76031efDE1f93"  // brave account2 
+var stake = "0xB4c3B6CF06e162857b96de1186a5A69901caEf3b"   //ropsten account1
+var community = "0xfe2589D503696026C6e9e5596390809ac11Bb657"  //ropsten account2
+var team = "0x016C0AD5e27FA091Bc6351261C59020671d958ab"   //ropsten account3
+*/
+await deployer.deploy(DummyERC20,game,stake,community,team)
+  //await deployer.deploy(DummyMintableERC20, 'Dummy Mintable ERC20', 'DERC20')
+  // -- ends
+  /*
   // -- Dummy version of ERC721
   await deployer.deploy(DummyERC721, 'Dummy ERC721', 'DERC721')
   await deployer.deploy(DummyMintableERC721, 'Dummy Mintable ERC721', 'DMERC721')
@@ -103,16 +116,18 @@ module.exports = async(deployer, network, accounts) => {
   await deployer.deploy(DummyERC1155, 'Dummy ERC1155')
   await deployer.deploy(DummyMintableERC1155, 'Dummy Mintable ERC1155')
   // -- ends
-  
+  */
   const contractAddresses = utils.getContractAddresses()
 
   contractAddresses.root.RootChainManager = RootChainManager.address
+  //console.log("contractAddresses",contractAddresses.root.RootChainManager );
   contractAddresses.root.RootChainManagerProxy = RootChainManagerProxy.address
 
   contractAddresses.root.DummyStateSender = DummyStateSender.address
 
   contractAddresses.root.ERC20Predicate = ERC20Predicate.address
   contractAddresses.root.ERC20PredicateProxy = ERC20PredicateProxy.address
+  /*
   contractAddresses.root.MintableERC20Predicate = MintableERC20Predicate.address
   contractAddresses.root.MintableERC20PredicateProxy = MintableERC20PredicateProxy.address
   
@@ -128,15 +143,15 @@ module.exports = async(deployer, network, accounts) => {
   
   contractAddresses.root.EtherPredicate = EtherPredicate.address
   contractAddresses.root.EtherPredicateProxy = EtherPredicateProxy.address
-  
+  */
   contractAddresses.root.DummyERC20 = DummyERC20.address
-  contractAddresses.root.DummyMintableERC20 = DummyMintableERC20.address
-  
+   /*contractAddresses.root.DummyMintableERC20 = DummyMintableERC20.address
+ 
   contractAddresses.root.DummyERC721 = DummyERC721.address
   contractAddresses.root.DummyMintableERC721 = DummyMintableERC721.address
   
   contractAddresses.root.DummyERC1155 = DummyERC1155.address
   contractAddresses.root.DummyMintableERC1155 = DummyMintableERC1155.address
-
+*/
   utils.writeContractAddresses(contractAddresses)
 }
